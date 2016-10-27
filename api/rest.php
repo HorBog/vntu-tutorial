@@ -3,8 +3,10 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require 'vendor/autoload.php';
+require 'db.php';
 
 $app = new \Slim\App;
+DB::init('mysql:dbname=information_schema;host=127.0.0.1;port=3306', 'root', '');
 
 $app->options('/{routes:.+}', function ($request, $response, $args) {
     return $response;
@@ -31,6 +33,10 @@ $app->get('/posts', function (Request $request, Response $response) {
             ]
         ]
     ]));
+    return $response;
+});
+$app->get('/test', function (Request $request, Response $response) {
+    $response->getBody()->write(json_encode(DB::fetch('SELECT NOW()')));
     return $response;
 });
 
