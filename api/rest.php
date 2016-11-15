@@ -35,7 +35,7 @@ $app->add(new \Slim\Middleware\JwtAuthentication([
     "rules" => [
         new \Slim\Middleware\JwtAuthentication\RequestPathRule([
 //            "path" => "/api",
-            "passthrough" => ["/token"]
+            "passthrough" => ["/auth"]
         ]),
         new \Slim\Middleware\JwtAuthentication\RequestMethodRule([
             "passthrough" => ["OPTIONS"]
@@ -50,7 +50,7 @@ $app->add(new \Slim\Middleware\JwtAuthentication([
 //    ]s
 //]));
 
-$app->post("/token", function (Request $request, Response $response) {
+$app->post("/auth", function (Request $request, Response $response) {
     /* Here generate and return JWT to the client. */
 //    exit('O_o');
     $data = $request->getParsedBody();
@@ -68,8 +68,11 @@ $app->post("/token", function (Request $request, Response $response) {
             AUTH_SECRET
         );
         $response->getBody()->write(json_encode([
-            'id' => 1,
-            'login' => $login,
+            'user' => [
+                'id' => 1,
+                'login' => $login,
+                'name' => 'John Smith'
+            ],
             'token' => $token
         ]));
     } else {
